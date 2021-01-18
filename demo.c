@@ -87,10 +87,38 @@ void UserWordDemo()
 
   FreeJieba(handle);
 }
+void CutWithTagNameDemo() {
+  printf("CutWithTagNameDemo:\n");
+  // init will take a few seconds to load dicts.
+   
+  Jieba handle = NewJieba(DICT_PATH, HMM_PATH, USER_DICT, IDF_PATH, STOP_WORDS_PATH);
+
+  const char* s = "葡萄酸葡萄甜吃葡萄";
+  size_t len = strlen(s);
+ 
+  CJiebaWordWithTag *words=CutWithTag(handle,s, len); 
+  CJiebaWordWithTag* x;
+  int                aoff;
+  for (x = words; x->word; ) 
+  { 
+    printf("%d ", x->len);  
+
+    printf("%*.*s   tag[%s]\n", x->len, x->len, x->word,x->tag);
+    
+    
+    aoff=sizeof(CJiebaWordWithTag)+strlen(x->tag)+1;
+    x=(CJiebaWordWithTag*)(((char*)x)+aoff);  
+ 
+  } 
+
+  FreeWordTag(words); 
+  FreeJieba(handle);
+}
 
 int main(int argc, char** argv) {
   CutDemo();
   CutWithoutTagNameDemo();
+  CutWithTagNameDemo();
   ExtractDemo();
   UserWordDemo();
   return 0;
